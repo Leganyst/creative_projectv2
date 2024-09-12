@@ -34,7 +34,8 @@ def create_refresh_token(user_id: str) -> str:
     expiration = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     payload = {
         "user_id": user_id,
-        "exp": expiration
+        "exp": expiration,
+        "is_refresh": True
     }
     refresh_token = jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
     return refresh_token
@@ -78,3 +79,12 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
     """
     token = credentials.credentials.replace("Bearer ", "")
     return decode_token(token)
+
+def get_token(crendentials : HTTPAuthorizationCredentials = Depends(security)) -> str:
+    """
+    Получает токен из заголовка Authorization.
+    
+    :param crendentials: Авторизационные креды (токен)
+    :return: Токен
+    """
+    return crendentials.credentials.replace("Bearer ", "")
