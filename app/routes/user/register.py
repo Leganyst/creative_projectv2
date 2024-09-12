@@ -2,7 +2,8 @@ from os import name
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
-from app.depends.verified_user import get_user_from_db_depend
+from app.depends.verified_user import get_user_from_db_depend_auth
+from app.functions.hashing import hash_password
 from app.models.user import RegisterUser, UserModel
 from database.functions.user import get_user_from_db
 from database.init import get_db
@@ -15,6 +16,7 @@ register_router = APIRouter()
 async def register_user(user: RegisterUser,
                         session: Session = Depends(get_db)):
     user.email = user.email.lower()
+    user.password = hash_password(user.password)
     try:
         user_in_db = get_user_from_db(session, user.email)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists")

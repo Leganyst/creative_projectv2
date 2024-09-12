@@ -31,7 +31,7 @@ def create_refresh_token(user_id: str) -> str:
     :param user_id: Идентификатор пользователя для включения в токен
     :return: Строка refresh токена
     """
-    expiration = datetime.datetime.utc(datetime.timezone.utc) + datetime.timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
+    expiration = datetime.datetime.now(datetime.timezone.utc) + datetime.timedelta(days=REFRESH_TOKEN_EXPIRE_DAYS)
     payload = {
         "user_id": user_id,
         "exp": expiration
@@ -76,5 +76,5 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
     :param credentials: Авторизационные креды (токен)
     :return: Декодированные данные пользователя
     """
-    token = credentials.credentials
+    token = credentials.credentials.replace("Bearer ", "")
     return decode_token(token)
