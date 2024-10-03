@@ -19,5 +19,5 @@ def get_user_from_db(session: Session, email: int) -> User:
     """
     user = session.query(User).filter(User.email == email).first()
     if not user:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+        raise ValueError("User not found")
     return user

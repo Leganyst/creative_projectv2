@@ -53,7 +53,11 @@ async def get_user_from_db_depend_auth(user: LoginUser, session: Session = Depen
     Returns:
         User: Модель пользователя в БД
     """
-    user_in_db = get_user_from_db(session, user.email)
+    try:
+        user_in_db = get_user_from_db(session, user.email)
+    except ValueError as e:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
+    
     if not user_in_db:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="User not found")
     
