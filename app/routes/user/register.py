@@ -17,19 +17,28 @@ async def register_user(user: RegisterUser,
                         session: Session = Depends(get_db)):
     user.email = user.email.lower()
     user.password = hash_password(user.password)
+    
+    # Проверяем наличие пользователя с таким email
     try:
         user_in_db = get_user_from_db(session, user.email)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists")
     except ValueError:
         pass
     
-    user_in_db = User(**user.model_dump(exclude={"profession"}))
+    # Создаем запись пользователя в базе
+    user_in_db = User(**user.model_dump(exclude={"profession", "address", "birthdate"}))
     session.add(user_in_db)
-    session.commit()
-    
+    session.commit()  # Сохраняем пользователя сначала
+
+    # Если указана профессия, создаем мастера
     if user.profession:
-        user_in_db.master = Master(profession=user.profession)
+        master_data = {
+            "profession": user.profession,
+            "address": user.address,  # Адрес, если есть
+            "birthdate": user.birthdate  # Дата рождения, если есть
+        }
+        user_in_db.master = Master(**{key: value for key, value in master_data.items() if value is not None})
         session.add(user_in_db.master)
-        session.commit()
-    
+        session.commit()  # Сохраняем мастера
+
     return UserModel.model_validate(user_in_db)

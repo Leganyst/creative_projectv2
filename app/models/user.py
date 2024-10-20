@@ -4,6 +4,8 @@ class MasterModel(BaseModel):
     id: int = Field(description="ID Мастера", example=432)
     user_id: int = Field(description="ID как пользователя", example=432)
     profession: str = Field(description="Профессия мастера", example="Парикмахер")
+    address: str | None = Field(default=None, description="Адрес мастера", example="ул. Ленина, д. 1")  # Новое поле
+    birthdate: str | None = Field(default=None, description="Дата рождения мастера", example="1985-05-20")  # Новое поле
     
     class Config:
         from_attributes = True
@@ -26,7 +28,9 @@ class RegisterUser(BaseModel):
     phone_number: str = Field(description="Номер телефона пользователя", example="+79991234567")
     password: str = Field(description="Пароль пользователя", example="12345678")
     profession: str | None = Field(default=None, description="Профессия мастера", example="Парикмахер")
-    
+    address: str | None = Field(default=None, description="Адрес мастера", example="ул. Ленина, д. 1")  # Новое поле
+    birthdate: str | None = Field(default=None, description="Дата рождения мастера", example="1985-05-20")  # Новое поле
+
     
 class LoginUser(BaseModel):
     email: str
@@ -41,3 +45,5 @@ class UpdateUserModel(BaseModel):
     email: str | None = Field(description="Email пользователя", example="test_example@mail.com")
     phone_number: str | None = Field(description="Номер телефона пользователя", example="+79991234567")
     profession: str | None = Field(default=None, description="Профессия мастера", example="Парикмахер")
+    address: str | None = Field(default=None, description="Адрес мастера", example="ул. Ленина, д. 1")  # Новое поле
+    birthdate: str | None = Field(default=None, description="Дата рождения мастера", example="1985-05-20")  # Новое поле

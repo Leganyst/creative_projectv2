@@ -20,5 +20,7 @@ class Master(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     user_id: Mapped[int] = mapped_column(ForeignKey('users.id'), nullable=False)
     user = relationship('User', back_populates='master', uselist=False)
-    # Лучше бы предлагать варианты, но да ладно, и так сойдет пока
+    
     profession: Mapped[str] = mapped_column(nullable=False)
+    address: Mapped[str] = mapped_column(nullable=True)  # Новое необязательное поле
+    birthdate: Mapped[str] = mapped_column(nullable=True)  # Новое необязательное поле
